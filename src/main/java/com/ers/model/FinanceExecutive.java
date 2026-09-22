@@ -6,6 +6,10 @@ public class FinanceExecutive {
     private String email;
     private String department;
 
+    public  FinanceExecutive(){
+
+    }
+
     public FinanceExecutive(int employeeId, String fullName, String email, String department) {
         this.employeeId = employeeId;
         this.fullName = fullName;

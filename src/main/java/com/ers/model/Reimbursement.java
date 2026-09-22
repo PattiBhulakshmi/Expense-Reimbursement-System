@@ -12,6 +12,10 @@ public class Reimbursement {
     private int processedBy;
     private String status;
 
+    public Reimbursement(){
+
+    }
+
     public Reimbursement(int claimId, double reimbursedAmount, String paymentMode, String transactionRef, LocalDate reimbursementDate, int processedBy, String status) {
         this.claimId = claimId;
         this.reimbursedAmount = reimbursedAmount;

@@ -10,6 +10,10 @@ public class ExpenseClaim {
     private LocalDate claimDate;
     private String status;
     private String documentPath;
+
+    public ExpenseClaim(){
+
+    }
    
 
     public ExpenseClaim(int employeeId, String claimDesc, double claimAmount, LocalDate claimDate, String status, String documentPath) {

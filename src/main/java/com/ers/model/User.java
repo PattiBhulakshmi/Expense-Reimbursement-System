@@ -77,4 +77,8 @@ public class User {
                 ", createdAt=" + createdAt +
                 '}';
     }
+
+    public User() {
+
+    }
 }

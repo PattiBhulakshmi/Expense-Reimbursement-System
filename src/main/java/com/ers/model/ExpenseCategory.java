@@ -5,6 +5,10 @@ public class ExpenseCategory {
     private String category_name;
     private String description;
 
+    public  ExpenseCategory(){
+
+    }
+
     public ExpenseCategory(String category_name, String description) {
         this.category_name = category_name;
         this.description = description;

@@ -10,6 +10,10 @@ public class ClaimItem {
     private double amount;
     private LocalDate expenseDate;
 
+    public ClaimItem(){
+
+    }
+
     public ClaimItem(int claimId, int categoryId, String description, double amount, LocalDate expenseDate) {
         this.claimId = claimId;
         this.categoryId = categoryId;

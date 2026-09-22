@@ -6,42 +6,29 @@ import com.ers.model.User;
 import java.util.List;
 
 public class UserServiceImpl implements IUserService{
-    private IUserDao userDao;
-    public UserServiceImpl(IUserDao userDao){
-        this.userDao=userDao;
-    }
+     IUserDao userDao;
+     public  UserServiceImpl(){
+         this.userDao=new  com.ers.dao.UserDaoImpl();
+     }
+
     @Override
-    public User addUser(User user) {
+    public User registerUser(User user) {
+        User existing=userDao.getUserByUsername(user.getUserName());
+        if(existing !=null)
+        return null;
+        boolean status=userDao.registerUser(user);
+        if(status){
+            return  userDao.getUserByUsername(user.getUserName());
+        }
         return null;
     }
 
     @Override
-    public boolean updateUser(User user) {
-        return false;
-    }
-
-    @Override
-    public User getUserById(int userId) {
+    public User loginUser(String username, String password) {
+        User user=userDao.getUserByUsername(username);
+        if(user !=null && user.getPassword().equals(password)){
+            return user;
+        }
         return null;
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return List.of();
-    }
-
-    @Override
-    public boolean deleteUserById(int userId) {
-        return false;
-    }
-
-    @Override
-    public User getUserByUsername(String username) {
-        return null;
-    }
-
-    @Override
-    public boolean updateUserStatus(int userId, boolean active) {
-        return false;
     }
 }
