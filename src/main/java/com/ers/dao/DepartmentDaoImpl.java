@@ -7,16 +7,6 @@ import java.util.List;
 
 public class DepartmentDaoImpl implements IDepartmentDao{
     @Override
-    public Department addDepartment(Department department) {
-        return null;
-    }
-
-    @Override
-    public boolean updateDepartment(Department department) {
-        return false;
-    }
-
-    @Override
     public Department getDepartmentById(int departmentId) {
         return null;
     }
@@ -26,18 +16,8 @@ public class DepartmentDaoImpl implements IDepartmentDao{
         return List.of();
     }
 
-    @Override
-    public boolean deleteDepartmentById(int departmentId) {
-        return false;
-    }
 
-    @Override
-    public List<Employee> getEmployeesByDepartmentId(int departmentId) {
-        return List.of();
-    }
 
-    @Override
-    public Department getDepartmentByManagerId(int managerId) {
-        return null;
-    }
+
+
 }

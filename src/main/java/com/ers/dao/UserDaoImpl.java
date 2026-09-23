@@ -12,31 +12,34 @@ public class UserDaoImpl implements IUserDao{
     @Override
     public boolean registerUser(User user) {
         String sql="INSERT INTO users(user_name,password,role,is_active,created_at) VALUES(?,?,?,?,?)";
-        try (
-            Connection conn=new JDBCUtil().getConnection();
-            PreparedStatement ps=conn.prepareStatement(sql)){
-
-            ps.setString(1, user.getUserName());
-            ps.setString(2, user.getPassword());
-            ps.setString(3, user.getRole());
-            ps.setBoolean(4, user.isActive());
-            ps.setTimestamp(5, Timestamp.valueOf(user.getCreatedAt()));
+        try
+           {
+               Connection conn=new JDBCUtil().getConnection();
+               if(conn==null){
+                   System.out.println("DB connection is null! check JDBCUTIl");
+                   return false;
+               }
+               PreparedStatement ps=conn.prepareStatement(sql);
+                ps.setString(1, user.getUserName());
+                ps.setString(2, user.getPassword());
+                ps.setString(3, user.getRole());
+                ps.setBoolean(4, user.isActive());
+                ps.setTimestamp(5, Timestamp.valueOf(user.getCreatedAt()));
 
             int rows= ps.executeUpdate();
+            ps.close();
+            conn.close();
             return rows>0;
-
-
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-
     }
 
     @Override
     public User getUserByUsername(String name) {
 
-        String sql="SELECT * FROM users WHERE userName=?";
+        String sql="SELECT * FROM users WHERE user_name=?";
         try(Connection conn=new JDBCUtil().getConnection();
             PreparedStatement ps=conn.prepareStatement(sql)){
 
@@ -45,12 +48,12 @@ public class UserDaoImpl implements IUserDao{
 
             if(rs.next()){
                 User user=new User();
-                user.setUserId(rs.getInt("userId"));
-                user.setUserName(rs.getString("userName"));
+                user.setUserId(rs.getInt("user_id"));
+                user.setUserName(rs.getString("user_name"));
                 user.setPassword(rs.getString("password"));
                 user.setRole(rs.getString("role"));
-                user.setActive(rs.getBoolean("isActive"));
-                Timestamp ts = rs.getTimestamp("createdAt");
+                user.setActive(rs.getBoolean("is_active"));
+                Timestamp ts = rs.getTimestamp("created_at");
 
                 if(ts!=null){
                     user.setCreatedAt(ts.toLocalDateTime());

@@ -8,8 +8,9 @@ public class Employee {
     private String email;
     private int departmentId;
 
-    public Employee() {
 
+    public Employee() {
+        this.user = new com.ers.model.User();
     }
 
     public Employee(String fullName, User user, String email, int departmentId) {
@@ -17,6 +18,9 @@ public class Employee {
         this.user=user;
         this.email = email;
         this.departmentId = departmentId;
+    }
+
+    public Employee(int employeeId, User user, String fullName, String email, int departmentId) {
     }
 
     public int getEmployeeId() {

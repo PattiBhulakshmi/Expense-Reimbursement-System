@@ -2,7 +2,6 @@ package com.ers.controller;
 
 import com.ers.model.Employee;
 import com.ers.service.IEmployeeService;
-
 import java.util.List;
 
 public class EmployeeController {
@@ -12,19 +11,20 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    public Employee addNewEmployee(){
-        return null;
+    public Employee addNewEmployee(Employee emp){
+        return employeeService.addEmployee(emp);
     }
-    public boolean updateEmployee(Employee employee){
-        return false;
-    }
-    public Employee getEmployeeById(int employeeId) {
-        return null;
+
+    public Employee getEmployeeById(int employee_id) {
+        return employeeService.getEmployeeById(employee_id);
     }
     public List<Employee> getAllEmployees() {
-        return List.of();
+
+        return employeeService.getAllEmployees();
     }
-    public boolean deleteEmployeeById(int employeeId) {
-        return false;
+
+    public Employee getEmployeeByUserId(int userId) {
+        return employeeService.getEmployeeByUserId(userId);
     }
+
 }

@@ -17,10 +17,12 @@ public class UserController {
 
    private  IUserService userService;
    public  UserController(){
+
        this.userService=new UserServiceImpl();
    }
 
    public User registerUser(User user){
+
        return userService.registerUser(user);
    }
 

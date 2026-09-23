@@ -15,26 +15,27 @@ public class EmployeeServiceImpl implements IEmployeeService{
 
     @Override
     public Employee addEmployee(Employee employee) {
-        return null;
+
+        return employeeDao.addEmployee(employee);
     }
 
-    @Override
-    public boolean updateEmployee(Employee employee) {
-        return false;
-    }
 
     @Override
     public Employee getEmployeeById(int employeeId) {
-        return null;
+
+        return employeeDao.getEmployeeById(employeeId);
     }
 
     @Override
     public List<Employee> getAllEmployees() {
-        return List.of();
+
+        return employeeDao.getAllEmployees();
     }
 
     @Override
-    public boolean deleteEmployeeById(int employeeId) {
-        return false;
+    public Employee getEmployeeByUserId(int userId) {
+        return employeeDao.getEmployeeById(userId);
     }
+
+
 }
