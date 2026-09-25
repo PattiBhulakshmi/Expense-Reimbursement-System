@@ -1,17 +1,20 @@
 package com.ers.controller;
 
 import com.ers.model.Employee;
+import com.ers.service.EmployeeServiceImpl;
 import com.ers.service.IEmployeeService;
 import java.util.List;
 
 public class EmployeeController {
     private IEmployeeService employeeService;
 
-    public EmployeeController(IEmployeeService employeeService){
-        this.employeeService = employeeService;
+    public EmployeeController(){
+
+        this.employeeService = new EmployeeServiceImpl();
     }
 
     public Employee addNewEmployee(Employee emp){
+
         return employeeService.addEmployee(emp);
     }
 
@@ -24,6 +27,7 @@ public class EmployeeController {
     }
 
     public Employee getEmployeeByUserId(int userId) {
+
         return employeeService.getEmployeeByUserId(userId);
     }
 

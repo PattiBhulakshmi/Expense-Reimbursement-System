@@ -1,6 +1,7 @@
 package com.ers.controller;
 
 import com.ers.model.ExpenseCategory;
+import com.ers.service.ExpenseCategoryServiceImpl;
 import com.ers.service.IExpenseCategoryService;
 
 import java.util.List;
@@ -8,22 +9,19 @@ import java.util.List;
 public class ExpenseCategoryController {
     private IExpenseCategoryService expenseCategoryService;
 
-    public ExpenseCategoryController(IExpenseCategoryService expenseCategoryService) {
-        this.expenseCategoryService = expenseCategoryService;
+    public ExpenseCategoryController() {
+        this.expenseCategoryService = new ExpenseCategoryServiceImpl();
     }
     public ExpenseCategory addExpenseCategory(ExpenseCategory expenseCategory) {
-        return null;
+        return expenseCategoryService.addExpenseCategory(expenseCategory);
     }
-    public boolean updateExpenseCategory(ExpenseCategory expenseCategory) {
-        return false;
-    }
+
     public ExpenseCategory getExpenseCategoryById(int categoryId) {
-        return null;
+        return expenseCategoryService.getExpenseCategoryById(categoryId);
     }
     public List<ExpenseCategory> getAllExpenseCategories() {
-        return null;
+
+        return expenseCategoryService.getAllExpenseCategories();
     }
-    public boolean deleteExpenseCategoryById(int categoryId) {
-        return false;
-    }
+
 }

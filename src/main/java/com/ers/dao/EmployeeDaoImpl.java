@@ -14,9 +14,9 @@ import java.util.List;
 public class EmployeeDaoImpl implements IEmployeeDao {
     JDBCUtil jdbcUtil;
 
-    public EmployeeDaoImpl(JDBCUtil jdbcUtil){
+    public EmployeeDaoImpl(){
 
-        this.jdbcUtil=jdbcUtil;
+        this.jdbcUtil=new JDBCUtil();
     }
 
     @Override
@@ -72,7 +72,7 @@ public class EmployeeDaoImpl implements IEmployeeDao {
     public List<Employee> getAllEmployees() {
         List<Employee> list = new ArrayList<>();
 
-        String sql = "SELECT e.*, u.username, u.role FROM employees e JOIN users u ON e.user_id = u.user_id";
+        String sql = "SELECT e.*, u.user_name, u.role FROM employee e JOIN users u ON e.user_id = u.user_id";
         try (Connection con = jdbcUtil.getConnection();
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(sql)) {

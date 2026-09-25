@@ -6,8 +6,7 @@ import java.util.List;
 
 public interface IExpenseCategoryService {
     ExpenseCategory addExpenseCategory(ExpenseCategory expenseCategory);
-    boolean updateExpenseCategory(ExpenseCategory expenseCategory);
     ExpenseCategory getExpenseCategoryById(int categoryId);
     List<ExpenseCategory> getAllExpenseCategories();
-    boolean deleteExpenseCategoryById(int categoryId);
+
 }

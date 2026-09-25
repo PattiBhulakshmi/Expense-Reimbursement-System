@@ -1,57 +1,40 @@
 package com.ers.service;
 
+import com.ers.dao.ExpenseClaimDaoImpl;
+import com.ers.dao.IExpenseClaimDao;
 import com.ers.model.ExpenseClaim;
 
 import java.util.List;
 
 public class ExpenseClaimServiceImpl implements IExpenseClaimService {
-    @Override
-    public ExpenseClaim addExpenseClaim(ExpenseClaim expenseClaim) {
-        return null;
+ IExpenseClaimDao expenseClaimDao;
+
+    public ExpenseClaimServiceImpl(){
+        this.expenseClaimDao=new ExpenseClaimDaoImpl();
     }
 
     @Override
-    public boolean updateExpenseClaim(ExpenseClaim expenseClaim) {
-        return false;
+    public boolean submitClaim(ExpenseClaim claim) {
+        return expenseClaimDao.addExpenseClaim(claim);
     }
 
     @Override
-    public ExpenseClaim getExpenseClaimById(int claimId) {
-        return null;
+    public ExpenseClaim viewClaimById(int claimId) {
+        return expenseClaimDao.getExpenseClaimById(claimId);
     }
 
     @Override
-    public List<ExpenseClaim> getAllExpenseClaims() {
-        return List.of();
+    public List<ExpenseClaim> viewMyClaims(int employeeId) {
+        return expenseClaimDao.getClaimsByEmployeeId(employeeId);
     }
 
     @Override
-    public boolean deleteExpenseClaimById(int claimId) {
-        return false;
+    public List<ExpenseClaim> viewAllClaims() {
+        return expenseClaimDao.getAllClaims();
     }
 
     @Override
-    public List<ExpenseClaim> getClaimsByEmployeeId(int employeeId) {
-        return List.of();
-    }
-
-    @Override
-    public boolean submitClaim(int claimId) {
-        return false;
-    }
-
-    @Override
-    public boolean approveClaim(int claimId) {
-        return false;
-    }
-
-    @Override
-    public boolean rejectClaim(int claimId, String reason) {
-        return false;
-    }
-
-    @Override
-    public List<ExpenseClaim> getClaimsByStatus(String status) {
-        return List.of();
+    public boolean approveOrRejectClaim(int claimId, String status) {
+        return expenseClaimDao.updateClaimStatus(claimId, status);
     }
 }

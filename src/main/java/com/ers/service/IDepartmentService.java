@@ -6,7 +6,7 @@ import com.ers.model.Employee;
 import java.util.List;
 
 public interface IDepartmentService {
-
+    int insertDepartment(Department dept);
     Department getDepartmentById(int departmentId);
     List<Department> getAllDepartments();
 

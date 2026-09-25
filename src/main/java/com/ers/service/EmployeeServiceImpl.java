@@ -8,8 +8,9 @@ import java.util.List;
 
 public class EmployeeServiceImpl implements IEmployeeService{
     IEmployeeDao employeeDao;
-    public EmployeeServiceImpl(IEmployeeDao employeeDao){
-        this.employeeDao = employeeDao;
+    public EmployeeServiceImpl()
+    {
+        this.employeeDao = new EmployeeDaoImpl();
     }
     //Write business logic here
 
@@ -34,6 +35,7 @@ public class EmployeeServiceImpl implements IEmployeeService{
 
     @Override
     public Employee getEmployeeByUserId(int userId) {
+
         return employeeDao.getEmployeeById(userId);
     }
 

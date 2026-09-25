@@ -9,35 +9,32 @@ import java.util.List;
 public class DepartmentController {
     private IDepartmentService departmentService;
 
-    public DepartmentController(IDepartmentService departmentService) {
+
+
+    public DepartmentController() {
+
         this.departmentService = departmentService;
     }
 
     public Department addDepartment(Department department) {
+
+        int result = departmentService.insertDepartment(department);
+        if(result > 0) return department;
         return null;
     }
 
-    public boolean updateDepartment(Department department) {
-        return false;
-    }
 
     public Department getDepartmentById(int departmentId) {
-        return null;
+
+        return departmentService.getDepartmentById(departmentId);
     }
 
     public List<Department> getAllDepartments() {
-        return null;
+        return departmentService.getAllDepartments();
     }
 
-    public boolean deleteDepartmentById(int departmentId) {
-        return false;
-    }
 
-    public List<Employee> getEmployeesByDepartmentId(int departmentId) {
-        return null;
-    }
 
-    public Department getDepartmentByManagerId(int managerId) {
-        return null;
-    }
+
+
 }
