@@ -5,10 +5,6 @@ import com.ers.model.ClaimItem;
 import java.util.List;
 
 public interface IClaimItemService {
-    ClaimItem addClaimItem(ClaimItem claimItem);
-    boolean updateClaimItem(ClaimItem claimItem);
-    ClaimItem getClaimItemById(int itemId);
-    List<ClaimItem> getAllClaimItems();
-    boolean deleteClaimItemById(int itemId);
+   boolean addClaimItem(ClaimItem claimItem);
     List<ClaimItem> getClaimItemsByClaimId(int claimId);
 }

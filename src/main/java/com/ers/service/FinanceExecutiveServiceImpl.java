@@ -1,5 +1,7 @@
 package com.ers.service;
 
+import com.ers.dao.FinanceExecutiveDaoImpl;
+import com.ers.dao.IFinanceExecutiveDao;
 import com.ers.model.ExpenseClaim;
 import com.ers.model.FinanceExecutive;
 import com.ers.model.Reimbursement;
@@ -9,48 +11,40 @@ import java.util.List;
 //Business Logic
 
 public class FinanceExecutiveServiceImpl implements IFinanceExecutiveService {
-    @Override
-    public FinanceExecutive addFinanceExecutive(FinanceExecutive financeExecutive) {
-        return null;
-    }
+  IFinanceExecutiveDao financeExecutiveDao;
+
+  public FinanceExecutiveServiceImpl(){
+
+      this.financeExecutiveDao=new FinanceExecutiveDaoImpl();
+  }
 
     @Override
-    public boolean updateFinanceExecutive(FinanceExecutive financeExecutive) {
-        return false;
+    public FinanceExecutive addFinanceExecutive(FinanceExecutive fin) {
+        return financeExecutiveDao.addFinanceExecutive(fin);
     }
 
     @Override
     public FinanceExecutive getFinanceExecutiveById(int employeeId) {
-        return null;
+        return financeExecutiveDao.getFinanceExecutiveById(employeeId);
     }
 
     @Override
     public List<FinanceExecutive> getAllFinanceExecutives() {
-        return List.of();
-    }
-
-    @Override
-    public boolean deleteFinanceExecutiveById(int employeeId) {
-        return false;
+        return financeExecutiveDao.getAllFinanceExecutives();
     }
 
     @Override
     public List<ExpenseClaim> getPendingClaims() {
-        return List.of();
+        return financeExecutiveDao.getPendingClaims();
     }
 
     @Override
-    public ExpenseClaim getClaimById(int claimId) {
-        return null;
+    public boolean approveClaim(int claimId, int financeId) {
+        return financeExecutiveDao.approveClaim(claimId, financeId);
     }
 
     @Override
-    public boolean processPayment(int claimId, int financeExecutiveId, String paymentMode) {
-        return false;
-    }
-
-    @Override
-    public List<Reimbursement> getReimbursementHistory(int financeExecutiveId) {
-        return List.of();
+    public boolean processReimbursement(int claimId, int financeId, double amount) {
+        return financeExecutiveDao.processReimbursement(claimId, financeId, amount);
     }
 }

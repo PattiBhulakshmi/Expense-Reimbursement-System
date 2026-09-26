@@ -7,16 +7,10 @@ import com.ers.model.Reimbursement;
 import java.util.List;
 
 public interface IFinanceExecutiveDao {
-    //CRUD Operations
-    FinanceExecutive addFinanceExecutive(FinanceExecutive financeExecutive);
-    boolean updateFinanceExecutive(FinanceExecutive financeExecutive);
+    FinanceExecutive addFinanceExecutive(FinanceExecutive fin);
     FinanceExecutive getFinanceExecutiveById(int employeeId);
     List<FinanceExecutive> getAllFinanceExecutives();
-    boolean deleteFinanceExecutiveById(int employeeId);
-    //Expense Claim operations
     List<ExpenseClaim> getPendingClaims();
-    ExpenseClaim getClaimById(int claimId);
-    //Reimbursement operations
-    boolean processPayment(int claimId, int financeExecutiveId, String paymentMode);
-    List<Reimbursement> getReimbursementHistory(int financeExecutiveId);
+    boolean approveClaim(int claimId, int financeId);
+    boolean processReimbursement(int claimId, int financeId, double amount);
 }

@@ -8,11 +8,17 @@ import java.util.List;
 
 public class EmployeeServiceImpl implements IEmployeeService{
     IEmployeeDao employeeDao;
+
+
+    // Constructor used for Mockito testing
+    public EmployeeServiceImpl(IEmployeeDao employeeDao) {
+        this.employeeDao = employeeDao;
+    }
+
     public EmployeeServiceImpl()
     {
         this.employeeDao = new EmployeeDaoImpl();
     }
-    //Write business logic here
 
     @Override
     public Employee addEmployee(Employee employee) {

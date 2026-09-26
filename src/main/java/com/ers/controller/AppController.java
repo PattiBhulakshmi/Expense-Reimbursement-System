@@ -11,7 +11,6 @@ import com.ers.service.IUserService;
 import com.ers.service.UserServiceImpl;
 import com.ers.util.JDBCUtil;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.slf4j.Loggere;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,164 +20,210 @@ import java.util.logging.Logger;
 
 public class AppController {
 
-    private static final Logger log = LoggerFactory.getLogger(AppController.class);
+    private static final Logger logger=Logger.getLogger(AppController.class.getName());
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        UserController userController = new UserController();
-        EmployeeController empController = new EmployeeController();
-        DepartmentController depController = new DepartmentController();
-        ExpenseCategoryController expCategoryController = new ExpenseCategoryController();
-        ExpenseClaimController claimController = new ExpenseClaimController();
+    public static void main(String[] args){
 
-        log.info("Expense Reimbursement System started");
+        Scanner sc=new Scanner(System.in);
 
-        while (true) {
-            System.out.println("\n=== Expense Reimbursement System ===");
+        UserController userController=new UserController();
+        EmployeeController empController=new EmployeeController();
+        DepartmentController depController=new DepartmentController();
+        ExpenseCategoryController expCategoryController=new ExpenseCategoryController();
+        ExpenseClaimController expClaimController=new ExpenseClaimController();
+        ClaimItemController claimItemController=new ClaimItemController();
+        FinanceExecutiveController finController=new FinanceExecutiveController();
+        ReimbursementController reimbursementController=new ReimbursementController();
+
+        logger.info("Expense Reimbursement System started");
+
+        while(true){
+            System.out.println("\n=== EXPENSE REIMBURSEMENT SYSTEM ===");
             System.out.println("1. Register");
             System.out.println("2. Login");
             System.out.println("3. Department Operations");
             System.out.println("4. Exit");
             System.out.print("Enter choice: ");
 
-            try {
-                int choice = sc.nextInt();
+            try{
+                int choice=sc.nextInt();
                 sc.nextLine();
 
-                if (choice == 1) {
+                if(choice==1){
                     System.out.print("Enter username: ");
-                    String username = sc.nextLine();
-                    System.out.print("Enter password: ");
-                    String password = sc.nextLine();
-                    System.out.print("Enter role: ");
-                    String role = sc.nextLine();
+                    String username=sc.nextLine();
 
-                    User newUser = new User();
+                    System.out.print("Enter password: ");
+                    String password=sc.nextLine();
+
+                    System.out.print("Enter role (EMPLOYEE/FINANCE): ");
+                    String role=sc.nextLine();
+
+                    User newUser=new User();
                     newUser.setUserName(username);
                     newUser.setPassword(password);
                     newUser.setRole(role);
                     newUser.setActive(true);
                     newUser.setCreatedAt(LocalDateTime.now());
 
-                    User registered = userController.registerUser(newUser);
+                    User registered=userController.registerUser(newUser);
 
-                    if (registered != null) {
-                        System.out.println("Registration Success! UserId: " + registered.getUserId());
-                        log.info("User registered successfully. User ID: {}", registered.getUserId());
-                    } else {
+                    if(registered!=null){
+                        System.out.println("Registration Success! UserId: "+registered.getUserId());
+                    }else{
                         System.out.println("Registration Failed! Username already exists.");
-                        log.warn("Registration failed for username: {}", username);
                     }
-                } else if (choice == 2) {
+
+                }else if(choice==2){
+
                     System.out.print("Enter username: ");
-                    String username = sc.nextLine();
+                    String username=sc.nextLine();
+
                     System.out.print("Enter password: ");
-                    String password = sc.nextLine();
+                    String password=sc.nextLine();
 
-                    User loggedIn = userController.loginUser(username, password);
+                    User loggedIn=userController.loginUser(username,password);
 
-                    if (loggedIn != null) {
-                        System.out.println("Login Success! Welcome " + loggedIn.getUserName() + " Role: " + loggedIn.getRole());
-                        log.info("Login successful. Username: {}, Role: {}", loggedIn.getUserName(), loggedIn.getRole());
+                    if(loggedIn!=null){
+                        System.out.println("Login Success! Welcome "+loggedIn.getUserName()+" Role: "+loggedIn.getRole());
 
-                        if (loggedIn.getRole().equalsIgnoreCase("EMPLOYEE")) {
-                            showEmployeeMenu(sc, empController, expCategoryController, claimController, loggedIn);
+                        if(loggedIn.getRole().equalsIgnoreCase("EMPLOYEE")){
+                            showEmployeeMenu(sc,empController,expCategoryController,expClaimController,claimItemController,loggedIn);
+                        }else if(loggedIn.getRole().equalsIgnoreCase("FINANCE")){
+                            showFinanceMenu(sc,finController,expClaimController,reimbursementController,loggedIn);
+                        }else{
+                            System.out.println("Invalid role.");
                         }
-                    } else {
+
+                    }else{
                         System.out.println("Login Failed! Check username/password");
-                        log.warn("Login failed for username: {}", username);
                     }
-                } else if (choice == 3) {
-                    showDepartmentMenu(sc, depController);
-                } else if (choice == 4) {
+
+                }else if(choice==3){
+                    showDepartmentMenu(sc,depController);
+
+                }else if(choice==4){
                     System.out.println("Exiting...");
-                    log.info("Expense Reimbursement System stopped");
                     break;
-                } else {
+
+                }else{
                     System.out.println("Invalid choice.");
-                    log.warn("Invalid main menu choice: {}", choice);
                 }
-            } catch (Exception e) {
-                log.error("Error in main menu", e);
+
+            }catch(Exception e){
+                logger.log(Level.SEVERE,"Error in main menu",e);
                 System.out.println("Something went wrong.");
                 sc.nextLine();
             }
         }
+
         sc.close();
+        logger.info("Expense Reimbursement System stopped");
     }
 
-    public static void showEmployeeMenu(Scanner sc, EmployeeController empController, ExpenseCategoryController expCategoryController, ExpenseClaimController claimController, User loggedInUser) {
-        while (true) {
+    public static void showEmployeeMenu(Scanner sc,EmployeeController empController,
+                                        ExpenseCategoryController expCategoryController,
+                                        ExpenseClaimController expClaimController,
+                                        ClaimItemController claimItemController,
+                                        User loggedInUser){
+
+        while(true){
             System.out.println("\n--- EMPLOYEE MENU ---");
             System.out.println("1. View My Profile");
             System.out.println("2. View All Employees");
             System.out.println("3. Expense Category Operations");
             System.out.println("4. Expense Claim Operations");
-            System.out.println("5. Logout");
+            System.out.println("5. Claim Item Operations");
+            System.out.println("6. Logout");
             System.out.print("Enter choice: ");
 
-            try {
-                int ch = sc.nextInt();
+            try{
+                int ch=sc.nextInt();
                 sc.nextLine();
 
-                if (ch == 1) {
-                    Employee existing = empController.getEmployeeByUserId(loggedInUser.getUserId());
+                if(ch==1){
 
-                    if (existing != null) {
-                        System.out.println("Your Profile: " + existing.getEmployeeId() + " | " + existing.getFullName() + " | " + existing.getEmail());
-                        log.info("Employee profile viewed. Employee ID: {}", existing.getEmployeeId());
-                    } else {
+                    Employee existing=empController.getEmployeeByUserId(loggedInUser.getUserId());
+
+                    if(existing!=null){
+                        System.out.println("Your Profile: "+existing.getEmployeeId()+" | "+existing.getFullName()+" | "+existing.getEmail());
+                    }else{
                         System.out.println("No profile found. Let's INSERT your details:");
+
                         System.out.print("Enter Full Name: ");
-                        String name = sc.nextLine();
+                        String name=sc.nextLine();
+
                         System.out.print("Enter Email: ");
-                        String email = sc.nextLine();
+                        String email=sc.nextLine();
+
                         System.out.print("Enter Department ID (1-IT, 2-HR, 3-Finance): ");
-                        int dept = sc.nextInt();
+                        int dept=sc.nextInt();
                         sc.nextLine();
 
-                        Employee emp = new Employee();
+                        Employee emp=new Employee();
                         emp.setUserId(loggedInUser.getUserId());
                         emp.setFullName(name);
                         emp.setEmail(email);
                         emp.setDepartmentId(dept);
 
-                        Employee saved = empController.addNewEmployee(emp);
+                        Employee saved=empController.addNewEmployee(emp);
 
-                        if (saved != null) {
-                            System.out.println("INSERTED SUCCESS! ID: " + saved.getEmployeeId());
-                            log.info("Employee inserted successfully. Employee ID: {}", saved.getEmployeeId());
-                        } else {
+                        if(saved!=null){
+                            System.out.println("INSERTED SUCCESS! ID: "+saved.getEmployeeId());
+                        }else{
                             System.out.println("INSERT FAILED");
-                            log.warn("Employee insert failed for User ID: {}", loggedInUser.getUserId());
                         }
                     }
-                } else if (ch == 2) {
-                    List<Employee> employees = empController.getAllEmployees();
-                    employees.forEach(e -> System.out.println(e.getEmployeeId() + " | " + e.getFullName() + " | " + e.getEmail()));
-                    log.info("All employees viewed");
-                } else if (ch == 3) {
-                    showExpenseCategoryMenu(sc, expCategoryController);
-                } else if (ch == 4) {
-                    showExpenseClaimMenu(sc, claimController);
-                } else if (ch == 5) {
+
+                }else if(ch==2){
+                  List<Employee> list=empController.getAllEmployees();
+                    for (Employee e:list){
+                        System.out.println(e.getEmployeeId()+" | "+e.getFullName()+" | "+e.getEmail());
+                    }
+
+                }else if(ch==3){
+
+                    showExpenseCategoryMenu(sc,expCategoryController);
+
+                }else if(ch==4){
+
+                    Employee employee=empController.getEmployeeByUserId(loggedInUser.getUserId());
+
+                    if(employee!=null){
+                        showExpenseClaimMenu(sc,expClaimController,employee.getEmployeeId());
+                    }else{
+                        System.out.println("Create employee profile first.");
+                    }
+
+                }else if(ch==5){
+
+                    Employee employee=empController.getEmployeeByUserId(loggedInUser.getUserId());
+
+                    if(employee!=null){
+                        showClaimItemMenu(sc,claimItemController);
+                    }else{
+                        System.out.println("Create employee profile first.");
+                    }
+
+                }else if(ch==6){
                     System.out.println("Logout successful.");
-                    log.info("User logged out: {}", loggedInUser.getUserName());
                     break;
-                } else {
+
+                }else{
                     System.out.println("Invalid choice.");
-                    log.warn("Invalid employee menu choice: {}", ch);
                 }
-            } catch (Exception e) {
-                log.error("Error in Employee Menu", e);
+
+            }catch(Exception e){
+                logger.log(Level.SEVERE,"Error in Employee Menu",e);
                 System.out.println("Something went wrong.");
                 sc.nextLine();
             }
         }
     }
 
-    public static void showExpenseCategoryMenu(Scanner sc, ExpenseCategoryController expCatController) {
-        while (true) {
+    public static void showExpenseCategoryMenu(Scanner sc,ExpenseCategoryController expCatController){
+
+        while(true){
             System.out.println("\n--- EXPENSE CATEGORY MENU ---");
             System.out.println("1. Add Expense Category");
             System.out.println("2. View Category By ID");
@@ -186,164 +231,402 @@ public class AppController {
             System.out.println("4. Back");
             System.out.print("Enter choice: ");
 
-            try {
-                int choice = sc.nextInt();
+            try{
+                int choice=sc.nextInt();
                 sc.nextLine();
 
-                if (choice == 1) {
-                    System.out.print("Enter Category Name: ");
-                    String name = sc.nextLine();
-                    System.out.print("Enter Description: ");
-                    String desc = sc.nextLine();
+                if(choice==1){
 
-                    ExpenseCategory cat = new ExpenseCategory();
+                    System.out.print("Enter Category Name: ");
+                    String name=sc.nextLine();
+
+                    System.out.print("Enter Description: ");
+                    String desc=sc.nextLine();
+
+                    ExpenseCategory cat=new ExpenseCategory();
                     cat.setCategory_name(name);
                     cat.setDescription(desc);
 
-                    ExpenseCategory result = expCatController.addExpenseCategory(cat);
+                    ExpenseCategory result=expCatController.addExpenseCategory(cat);
 
-                    if (result != null) {
+                    if(result!=null){
                         System.out.println("Category Added Successfully!");
-                        log.info("Expense category added successfully: {}", name);
-                    } else {
+                    }else{
                         System.out.println("Failed to Add Category.");
-                        log.warn("Failed to add expense category: {}", name);
                     }
-                } else if (choice == 2) {
+
+                }else if(choice==2){
+
                     System.out.print("Enter Category ID: ");
-                    int id = sc.nextInt();
+                    int id=sc.nextInt();
                     sc.nextLine();
 
-                    ExpenseCategory cat = expCatController.getExpenseCategoryById(id);
+                    ExpenseCategory cat=expCatController.getExpenseCategoryById(id);
 
-                    if (cat != null) {
-                        System.out.println("ID: " + cat.getCategory_id() + " | Name: " + cat.getCategory_name() + " | Desc: " + cat.getDescription());
-                        log.info("Expense category viewed. Category ID: {}", id);
-                    } else {
+                    if(cat!=null){
+                        System.out.println("ID: "+cat.getCategory_id()+" | Name: "+cat.getCategory_name()+" | Desc: "+cat.getDescription());
+                    }else{
                         System.out.println("Category Not Found");
-                        log.warn("Expense category not found. Category ID: {}", id);
                     }
-                } else if (choice == 3) {
-                    List<ExpenseCategory> list = expCatController.getAllExpenseCategories();
+
+                }else if(choice==3){
+
+                    List<ExpenseCategory> list=expCatController.getAllExpenseCategories();
+
                     System.out.println("--- All Categories ---");
 
-                    for (ExpenseCategory c : list) {
-                        System.out.println(c.getCategory_id() + " | " + c.getCategory_name() + " | " + c.getDescription());
+                    for(ExpenseCategory c:list){
+                        System.out.println(c.getCategory_id()+" | "+c.getCategory_name()+" | "+c.getDescription());
                     }
-                    log.info("All expense categories viewed");
-                } else if (choice == 4) {
+
+                }else if(choice==4){
                     break;
-                } else {
+
+                }else{
                     System.out.println("Invalid choice.");
-                    log.warn("Invalid expense category menu choice: {}", choice);
                 }
-            } catch (Exception e) {
-                log.error("Error in Expense Category Menu", e);
+
+            }catch(Exception e){
+                logger.log(Level.SEVERE,"Error in Expense Category Menu",e);
                 System.out.println("Something went wrong.");
                 sc.nextLine();
             }
         }
     }
 
-    public static void showExpenseClaimMenu(Scanner sc, ExpenseClaimController claimController) {
-        while (true) {
-            System.out.println("\n--- EXPENSE CLAIM MENU ---");
-            System.out.println("1. Submit Claim");
-            System.out.println("2. View My Claims");
-            System.out.println("3. View All Claims");
-            System.out.println("4. Approve/Reject Claim");
-            System.out.println("5. Back");
-            System.out.print("Enter Choice: ");
+    public static void showExpenseClaimMenu(Scanner sc,ExpenseClaimController expClaimController,int employeeId){
 
-            try {
-                int choice = sc.nextInt();
+        while(true){
+            System.out.println("\n--- EXPENSE CLAIM MENU ---");
+            System.out.println("1. Create Expense Claim");
+            System.out.println("2. View My Claims");
+            System.out.println("3. View Claim By ID");
+            System.out.println("4. Back");
+            System.out.print("Enter choice: ");
+
+            try{
+                int ch=sc.nextInt();
                 sc.nextLine();
 
-                if (choice == 1) {
-                    ExpenseClaim claim = new ExpenseClaim();
+                if(ch==1){
 
-                    System.out.print("Enter Employee ID: ");
-                    int employeeId = sc.nextInt();
+                    System.out.print("Enter Claim Description: ");
+                    String description=sc.nextLine();
+
+                    System.out.print("Enter Claim Amount: ");
+                    double amount=sc.nextDouble();
                     sc.nextLine();
 
-                    System.out.print("Enter Description: ");
-                    String description = sc.nextLine();
+                    System.out.print("Enter Document Path: ");
+                    String documentPath=sc.nextLine();
 
-                    System.out.print("Enter Amount: ");
-                    double amount = sc.nextDouble();
-                    sc.nextLine();
-
+                    ExpenseClaim claim=new ExpenseClaim();
                     claim.setEmployeeId(employeeId);
                     claim.setClaimDesc(description);
                     claim.setClaimAmount(amount);
-                    claim.setClaimDate(LocalDate.now());
+                    claim.setDocumentPath(documentPath);
                     claim.setStatus("PENDING");
-                    claim.setDocumentPath("bill.pdf");
 
-                    if (claimController.submitClaim(claim)) {
-                        System.out.println("Claim Submitted Successfully!");
-                        log.info("Claim submitted successfully. Employee ID: {}, Amount: {}", employeeId, amount);
-                    } else {
-                        System.out.println("Claim Submission Failed!");
-                        log.warn("Claim submission failed. Employee ID: {}", employeeId);
+                    ExpenseClaim result=expClaimController.submitClaim(claim);
+                    if(result!=null){
+                        System.out.println("Claim Created Successfully! Claim ID: "+result.getClaimId());
+                    }else{
+                        System.out.println("Claim Creation Failed.");
                     }
-                } else if (choice == 2) {
-                    System.out.print("Enter Employee ID: ");
-                    int empId = sc.nextInt();
+
+                }else if(ch==2){
+
+                    List<ExpenseClaim> claims=expClaimController.viewMyClaims(employeeId);
+
+                    for(ExpenseClaim claim:claims){
+                        System.out.println(claim.getClaimId()+" | "+claim.getClaimDesc()+" | "+claim.getClaimAmount()+" | "+claim.getStatus());
+                    }
+
+                }else if(ch==3){
+
+                    System.out.print("Enter Claim ID: ");
+                    int claimId=sc.nextInt();
                     sc.nextLine();
 
-                    List<ExpenseClaim> myList = claimController.viewMyClaims(empId);
+                    ExpenseClaim claim=expClaimController.viewClaimById(claimId);
 
-                    if (myList == null || myList.isEmpty()) {
-                        System.out.println("No Claims Found.");
-                        log.info("No claims found for Employee ID: {}", empId);
-                    } else {
-                        System.out.println("--- My Claims ---");
-                        myList.forEach(System.out::println);
-                        log.info("Claims viewed for Employee ID: {}", empId);
+                    if(claim!=null){
+                        System.out.println(claim.getClaimId()+" | "+claim.getClaimDesc()+" | "+claim.getClaimAmount()+" | "+claim.getStatus());
+                    }else{
+                        System.out.println("Claim not found.");
                     }
-                } else if (choice == 3) {
-                    List<ExpenseClaim> allList = claimController.viewAllClaims();
 
-                    if (allList == null || allList.isEmpty()) {
-                        System.out.println("No Claims Found.");
-                        log.info("No expense claims found");
-                    } else {
-                        System.out.println("--- All Claims ---");
-                        allList.forEach(System.out::println);
-                        log.info("All expense claims viewed");
-                    }
-                } else if (choice == 4) {
-                    System.out.print("Enter Claim ID to Approve/Reject: ");
-                    int claimId = sc.nextInt();
-                    sc.nextLine();
-
-                    System.out.print("Enter Status (APPROVED/REJECTED): ");
-                    String status = sc.nextLine();
-
-                    if (claimController.approveOrRejectClaim(claimId, status)) {
-                        System.out.println("Status Updated Successfully!");
-                        log.info("Claim status updated. Claim ID: {}, Status: {}", claimId, status);
-                    } else {
-                        System.out.println("Status Update Failed!");
-                        log.warn("Claim status update failed. Claim ID: {}", claimId);
-                    }
-                } else if (choice == 5) {
+                }else if(ch==4){
                     break;
-                } else {
-                    System.out.println("Invalid Choice.");
-                    log.warn("Invalid expense claim menu choice: {}", choice);
+
+                }else{
+                    System.out.println("Invalid choice.");
                 }
-            } catch (Exception e) {
-                log.error("Error in Expense Claim Menu", e);
+
+            }catch(Exception e){
+                logger.log(Level.SEVERE,"Error in Expense Claim Menu",e);
                 System.out.println("Something went wrong.");
                 sc.nextLine();
             }
         }
     }
 
-    public static void showDepartmentMenu(Scanner sc, DepartmentController depController) {
-        while (true) {
+    public static void showClaimItemMenu(Scanner sc,ClaimItemController claimItemController){
+
+        while(true){
+            System.out.println("\n--- CLAIM ITEM MENU ---");
+            System.out.println("1. Add Claim Item");
+            System.out.println("2. View Items By Claim ID");
+            System.out.println("3. Back");
+            System.out.print("Enter choice: ");
+
+            try{
+                int ch=sc.nextInt();
+                sc.nextLine();
+
+                if(ch==1){
+
+                    System.out.print("Enter Claim ID: ");
+                    int claimId=sc.nextInt();
+                    System.out.print("Enter Category ID: ");
+                    int categoryId=sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Enter Description: ");
+                    String description=sc.nextLine();
+                    System.out.print("Enter Amount: ");
+                    double amount=sc.nextDouble();
+                    sc.nextLine();
+
+                    ClaimItem item=new ClaimItem();
+                    item.setClaimId(claimId);
+                    item.setCategoryId(categoryId);
+                    item.setDescription(description);
+                    item.setAmount(amount);
+
+                    boolean result=claimItemController.addItem(item);
+
+                    if(result){
+                        System.out.println("Claim Item Added Successfully.");
+                    }else{
+                        System.out.println("Failed to Add Claim Item.");
+                    }
+
+                }else if(ch==2){
+
+                    System.out.print("Enter Claim ID: ");
+                    int claimId=sc.nextInt();
+                    sc.nextLine();
+
+                    List<ClaimItem> items=claimItemController.getItemsByClaimId(claimId);
+
+                    for(ClaimItem item:items){
+                        System.out.println(item.getItemId()+" | "+item.getClaimId()+" | "+item.getCategoryId()+" | "+item.getDescription()+" | "+item.getAmount());
+                    }
+
+                }else if(ch==3){
+                    break;
+
+                }else{
+                    System.out.println("Invalid choice.");
+                }
+
+            }catch(Exception e){
+                logger.log(Level.SEVERE,"Error in Claim Item Menu",e);
+                System.out.println("Something went wrong.");
+                sc.nextLine();
+            }
+        }
+    }
+
+    public static void showFinanceMenu(Scanner sc,FinanceExecutiveController finController,
+                                       ExpenseClaimController expClaimController,
+                                       ReimbursementController reimbursementController,
+                                       User loggedInUser){
+
+        while(true){
+            System.out.println("\n--- FINANCE MENU ---");
+            System.out.println("1. View Finance Profile");
+            System.out.println("2. View Pending Claims");
+            System.out.println("3. Approve Claim");
+            System.out.println("4. Reject Claim");
+            System.out.println("5. Reimbursement Operations");
+            System.out.println("6. Logout");
+            System.out.print("Enter choice: ");
+
+            try{
+                int ch=sc.nextInt();
+                sc.nextLine();
+
+                if(ch==1){
+                    FinanceExecutive finance=finController.getFinanceExecutiveById(loggedInUser.getUserId());
+                    if(finance!=null){
+                        System.out.println(finance.getEmployeeId()+" | "+finance.getFullName()+" | "+finance.getEmail());
+                    }else {
+                        System.out.println("No finance profile found. Let's INSERT your details:");
+                        System.out.print("Enter Full Name: ");
+                        String name = sc.nextLine();
+                        System.out.print("Enter Email: ");
+                        String email = sc.nextLine();
+
+                        FinanceExecutive newFin = new FinanceExecutive();
+                        newFin.setEmployeeId(loggedInUser.getUserId());
+                        newFin.setFullName(name);
+                        newFin.setEmail(email);
+                        newFin.setDepartment("Finance");
+
+                        FinanceExecutive saved = finController.addNewFinanceExecutive(newFin);
+                        if (saved != null) {
+                            System.out.println("FINANCE PROFILE INSERTED SUCCESS! ID: " + saved.getEmployeeId());
+                        } else {
+                            System.out.println("INSERT FAILED");
+                        }
+                    }
+
+                }else if(ch==2){
+
+                    List<ExpenseClaim> claims=expClaimController.viewAllClaims();
+
+                    for(ExpenseClaim claim:claims){
+                        System.out.println(claim.getClaimId()+" | Employee: "+claim.getEmployeeId()+" | "+claim.getClaimAmount()+" | "+claim.getStatus());
+                    }
+
+                }else if(ch==3){
+
+                    System.out.print("Enter Claim ID: ");
+                    int claimId=sc.nextInt();
+                    sc.nextLine();
+
+                    boolean result=expClaimController.approveOrRejectClaim(claimId,"Approved");
+
+                    if(result){
+                        System.out.println("Claim Approved Successfully.");
+                    }else{
+                        System.out.println("Claim Approval Failed.");
+                    }
+
+                }else if(ch==4){
+
+                    System.out.print("Enter Claim ID: ");
+                    int claimId=sc.nextInt();
+                    sc.nextLine();
+
+                    System.out.print("Enter Rejection Reason: ");
+                    String reason=sc.nextLine();
+
+                    boolean result=expClaimController.approveOrRejectClaim(claimId,"Rejected",reason);
+
+                    if(result){
+                        System.out.println("Claim Rejected.");
+                    }else{
+                        System.out.println("Claim Rejection Failed.");
+                    }
+
+                }else if(ch==5){
+
+                    showReimbursementMenu(sc,reimbursementController,finController,loggedInUser);
+
+                }else if(ch==6){
+                    System.out.println("Finance Logout Successful.");
+                    break;
+
+                }else{
+                    System.out.println("Invalid choice.");
+                }
+
+            }catch(Exception e){
+                logger.log(Level.SEVERE,"Error in Finance Menu",e);
+                System.out.println("Something went wrong.");
+                sc.nextLine();
+            }
+        }
+    }
+
+    public static void showReimbursementMenu(Scanner sc,ReimbursementController reimbursementController,
+                                             FinanceExecutiveController finController,User loggedInUser){
+
+        while(true){
+            System.out.println("\n--- REIMBURSEMENT MENU ---");
+            System.out.println("1. Issue Reimbursement");
+            System.out.println("2. View Reimbursement By Claim ID");
+            System.out.println("3. Back");
+            System.out.print("Enter choice: ");
+
+            try{
+                int ch=sc.nextInt();
+                sc.nextLine();
+
+                if(ch==1){
+
+                    FinanceExecutive finance=finController.getFinanceExecutiveById(loggedInUser.getUserId());
+
+                    if(finance==null){
+                        System.out.println("Finance profile not found.");
+                        continue;
+                    }
+
+                    System.out.print("Enter Approved Claim ID: ");
+                    int claimId=sc.nextInt();
+                    System.out.print("Enter Reimbursement Amount: ");
+                    double amount=sc.nextDouble();
+                    sc.nextLine();
+                    System.out.print("Enter Payment Mode: ");
+                    String paymentMode=sc.nextLine();
+                    System.out.print("Enter Transaction Reference: ");
+                    String transactionRef=sc.nextLine();
+
+                    Reimbursement reimbursement=new Reimbursement();
+                    reimbursement.setClaimId(claimId);
+                    reimbursement.setReimbursedAmount(amount);
+                    reimbursement.setPaymentMode(paymentMode);
+                    reimbursement.setTransactionRef(transactionRef);
+                    reimbursement.setProcessedBy(finance.getEmployeeId());
+                    reimbursement.setStatus("PROCESSED");
+
+                    boolean result=reimbursementController.payClaim(reimbursement);
+
+                    if(result){
+                        System.out.println("Reimbursement Issued Successfully!");
+                    }else{
+                        System.out.println("Reimbursement Failed.");
+                    }
+
+                }else if(ch==2){
+
+                    System.out.print("Enter Claim ID: ");
+                    int claimId=sc.nextInt();
+                    sc.nextLine();
+
+                    Reimbursement reimbursement=reimbursementController.checkMyPayment(claimId);
+
+                    if(reimbursement!=null){
+                        System.out.println("Reimbursement ID: "+reimbursement.getReimbursementId());
+                        System.out.println("Claim ID: "+reimbursement.getClaimId());
+                        System.out.println("Amount: "+reimbursement.getReimbursedAmount());
+                        System.out.println("Payment Mode: "+reimbursement.getPaymentMode());
+                        System.out.println("Transaction Ref: "+reimbursement.getTransactionRef());
+                        System.out.println("Status: "+reimbursement.getStatus());
+                    }else{
+                        System.out.println("Reimbursement not found.");
+                    }
+
+                }else if(ch==3){
+                    break;
+
+                }else{
+                    System.out.println("Invalid choice.");
+                }
+
+            }catch(Exception e){
+                logger.log(Level.SEVERE,"Error in Reimbursement Menu",e);
+                System.out.println("Something went wrong.");
+                sc.nextLine();
+            }
+        }
+    }
+
+    public static void showDepartmentMenu(Scanner sc,DepartmentController depController){
+
+        while(true){
             System.out.println("\n--- DEPARTMENT MENU ---");
             System.out.println("1. Add Department");
             System.out.println("2. View All Departments");
@@ -351,59 +634,65 @@ public class AppController {
             System.out.println("4. Back");
             System.out.print("Enter choice: ");
 
-            try {
-                int ch = sc.nextInt();
+            try{
+                int ch=sc.nextInt();
                 sc.nextLine();
 
-                if (ch == 1) {
+                if(ch==1){
+
                     System.out.print("Enter Department Name: ");
-                    String name = sc.nextLine();
+                    String name=sc.nextLine();
+
                     System.out.print("Enter Manager ID: ");
-                    int managerId = sc.nextInt();
+                    int managerId=sc.nextInt();
                     sc.nextLine();
 
-                    Department dept = new Department();
+                    Department dept=new Department();
                     dept.setDepartmentName(name);
                     dept.setManagerId(managerId);
 
-                    Department result = depController.addDepartment(dept);
+                    Department result=depController.addDepartment(dept);
 
-                    if (result != null) {
+                    if(result!=null){
                         System.out.println("Department Inserted Successfully!");
-                        log.info("Department inserted successfully: {}", name);
-                    } else {
+                    }else{
                         System.out.println("Failed to Insert Department");
-                        log.warn("Department insertion failed: {}", name);
                     }
-                } else if (ch == 2) {
-                    depController.getAllDepartments().forEach(d -> System.out.println(d.getDepartmentId() + " | " + d.getDepartmentName() + " | " + d.getManagerId()));
-                    log.info("All departments viewed");
-                } else if (ch == 3) {
+
+                }else if(ch==2){
+
+                    depController.getAllDepartments().forEach(d->
+                            System.out.println(d.getDepartmentId()+" | "+d.getDepartmentName()+" | "+d.getManagerId()));
+
+                }else if(ch==3){
+
                     System.out.print("Enter Department ID: ");
-                    int id = sc.nextInt();
+                    int id=sc.nextInt();
                     sc.nextLine();
 
-                    Department d = depController.getDepartmentById(id);
+                    Department d=depController.getDepartmentById(id);
 
-                    if (d != null) {
-                        System.out.println(d.getDepartmentId() + " | " + d.getDepartmentName() + " | " + d.getManagerId());
-                        log.info("Department viewed. Department ID: {}", id);
-                    } else {
+                    if(d!=null){
+                        System.out.println(d.getDepartmentId()+" | "+d.getDepartmentName()+" | "+d.getManagerId());
+                    }else{
                         System.out.println("Department not found.");
-                        log.warn("Department not found. Department ID: {}", id);
                     }
-                } else if (ch == 4) {
+
+                }else if(ch==4){
                     break;
-                } else {
+
+                }else{
                     System.out.println("Invalid choice.");
-                    log.warn("Invalid department menu choice: {}", ch);
                 }
-            } catch (Exception e) {
-                log.error("Error in Department Menu", e);
+
+            }catch(Exception e){
+                logger.log(Level.SEVERE,"Error in Department Menu",e);
                 System.out.println("Something went wrong.");
                 sc.nextLine();
             }
         }
     }
+
     }
+
 

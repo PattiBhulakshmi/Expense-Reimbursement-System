@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface IExpenseClaimDao {
 
-    boolean addExpenseClaim(ExpenseClaim claim);
+    ExpenseClaim addExpenseClaim(ExpenseClaim claim);
     ExpenseClaim getExpenseClaimById(int claimId);
-    List<ExpenseClaim> getClaimsByEmployeeId(int employeeId);
+    List<ExpenseClaim> getClaimsByEmployeeId(int empId);
     List<ExpenseClaim> getAllClaims();
-    boolean updateClaimStatus(int claimId, String status);
+    boolean updateClaimStatus(int claimId, String status, String reason);
 }
 

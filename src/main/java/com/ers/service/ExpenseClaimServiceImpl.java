@@ -14,27 +14,18 @@ public class ExpenseClaimServiceImpl implements IExpenseClaimService {
     }
 
     @Override
-    public boolean submitClaim(ExpenseClaim claim) {
-        return expenseClaimDao.addExpenseClaim(claim);
-    }
-
+    public ExpenseClaim addExpenseClaim(ExpenseClaim claim) {
+        return expenseClaimDao.addExpenseClaim(claim); }
     @Override
-    public ExpenseClaim viewClaimById(int claimId) {
-        return expenseClaimDao.getExpenseClaimById(claimId);
-    }
-
+    public ExpenseClaim getExpenseClaimById(int claimId) {
+        return expenseClaimDao.getExpenseClaimById(claimId); }
     @Override
-    public List<ExpenseClaim> viewMyClaims(int employeeId) {
-        return expenseClaimDao.getClaimsByEmployeeId(employeeId);
-    }
-
+    public List<ExpenseClaim> getClaimsByEmployeeId(int empId) {
+        return expenseClaimDao.getClaimsByEmployeeId(empId); }
     @Override
-    public List<ExpenseClaim> viewAllClaims() {
-        return expenseClaimDao.getAllClaims();
-    }
-
+    public List<ExpenseClaim> getAllClaims() {
+        return expenseClaimDao.getAllClaims(); }
     @Override
-    public boolean approveOrRejectClaim(int claimId, String status) {
-        return expenseClaimDao.updateClaimStatus(claimId, status);
-    }
+    public boolean updateClaimStatus(int claimId, String status, String reason) {
+        return expenseClaimDao.updateClaimStatus(claimId, status, reason); }
 }

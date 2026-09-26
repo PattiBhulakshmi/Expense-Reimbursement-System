@@ -14,24 +14,24 @@ public class ExpenseClaimController {
         this.expenseClaimService = new ExpenseClaimServiceImpl();
     }
 
-    public boolean submitClaim(ExpenseClaim claim) {
-        return expenseClaimService.submitClaim(claim);
+    public ExpenseClaim submitClaim(ExpenseClaim claim){
+        return expenseClaimService.addExpenseClaim(claim);
     }
-
-
-    public ExpenseClaim viewClaimById(int claimId) {
-        return expenseClaimService.viewClaimById(claimId);
+    public ExpenseClaim viewClaimById(int claimId){
+        return expenseClaimService.getExpenseClaimById(claimId);
     }
-
-    public List<ExpenseClaim> viewMyClaims(int employeeId) {
-        return expenseClaimService.viewMyClaims(employeeId);
+    public List<ExpenseClaim> viewMyClaims(int employeeId){
+        return expenseClaimService.getClaimsByEmployeeId(employeeId);
     }
-
-    public List<ExpenseClaim> viewAllClaims() {
-        return expenseClaimService.viewAllClaims();
+    public List<ExpenseClaim> viewAllClaims(){
+        return expenseClaimService.getAllClaims();
     }
-
-    public boolean approveOrRejectClaim(int claimId, String status) {
-        return expenseClaimService.approveOrRejectClaim(claimId, status);
+    // For Approve
+    public boolean approveOrRejectClaim(int claimId, String status){
+        return expenseClaimService.updateClaimStatus(claimId, status, null);
+    }
+    // For Reject with reason - OVERLOAD - This fixes your ch==4
+    public boolean approveOrRejectClaim(int claimId, String status, String reason){
+        return expenseClaimService.updateClaimStatus(claimId, status, reason);
     }
 }

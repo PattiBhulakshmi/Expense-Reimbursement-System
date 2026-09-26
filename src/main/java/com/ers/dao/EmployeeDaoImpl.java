@@ -30,7 +30,7 @@ public class EmployeeDaoImpl implements IEmployeeDao {
             ps.setInt(1, employee.getUserId());
             ps.setString(2, employee.getFullName());
             ps.setString(3, employee.getEmail());
-            ps.setInt(4, employee.getDepartmentId());
+            ps.setInt(4, 1);
 
             ps.executeUpdate();
         } catch (Exception e) {
@@ -40,26 +40,24 @@ public class EmployeeDaoImpl implements IEmployeeDao {
     }
 
     @Override
-    public Employee getEmployeeById(int employeeId) {
-        String sql = "SELECT e.employee_id, e.full_name, e.email, e.department_id, e.user_id, u.username, u.role " +
-                "FROM employee e JOIN users u ON e.user_id = u.user_id " +
-                "WHERE e.employee_id = ?";
-
+    public Employee getEmployeeById(int userId) {
+        String sql =  "SELECT employee_id, user_id,full_name, email, department_id FROM employee WHERE user_id = ?";
         Employee employee = null;
 
         try (Connection con = jdbcUtil.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, employeeId);
+            ps.setInt(1,userId);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 employee= new Employee();
                 employee.setEmployeeId(rs.getInt("employee_id"));
+                employee.setUserId(rs.getInt("user_id"));
                 employee.setFullName(rs.getString("full_name"));
                 employee.setEmail(rs.getString("email"));
                 employee.setDepartmentId(rs.getInt("department_id"));
-                employee.setUserId(rs.getInt("user_id"));
+
             }
 
         } catch (Exception e) {
@@ -71,8 +69,7 @@ public class EmployeeDaoImpl implements IEmployeeDao {
     @Override
     public List<Employee> getAllEmployees() {
         List<Employee> list = new ArrayList<>();
-
-        String sql = "SELECT e.*, u.user_name, u.role FROM employee e JOIN users u ON e.user_id = u.user_id";
+        String sql = "SELECT  employee_id,user_id,full_name,email,department_id FROM employee";
         try (Connection con = jdbcUtil.getConnection();
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
@@ -81,9 +78,7 @@ public class EmployeeDaoImpl implements IEmployeeDao {
                 User user=new User();
                 user.setUserId(rs.getInt("user_id"));
                 user.setUserName(rs.getString("user_name"));
-
                 user.setRole(rs.getString("role"));
-
                 Employee emp = new Employee(
                         rs.getString("full_name"),
                         user,
@@ -93,11 +88,10 @@ public class EmployeeDaoImpl implements IEmployeeDao {
                 emp.setEmployeeId(rs.getInt("employee_id"));
                 list.add(emp);
             }
-
         }catch (Exception e) {
             e.printStackTrace();
         }
-        return List.of();
+        return list;
     }
 
 }

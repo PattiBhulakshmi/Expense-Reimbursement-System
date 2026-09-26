@@ -2,38 +2,27 @@ package com.ers.controller;
 
 import com.ers.model.Reimbursement;
 import com.ers.service.IReimbursementService;
+import com.ers.service.ReimbursementServiceImpl;
 
 import java.util.List;
 
 public class ReimbursementController {
     private IReimbursementService reimbursementService;
 
-    public ReimbursementController(IReimbursementService reimbursementService) {
-        this.reimbursementService = reimbursementService;
+    public ReimbursementController() {
+        this.reimbursementService = new ReimbursementServiceImpl();
     }
 
-    public Reimbursement addReimbursement(Reimbursement reimbursement) {
-        return null;
+    public boolean payClaim(Reimbursement r){
+
+        return reimbursementService.addReimbursement(r);
     }
-    public boolean updateReimbursement(Reimbursement reimbursement) {
-        return false;
+
+    public Reimbursement checkMyPayment(int claimId){
+        return reimbursementService.getReimbursementByClaimId(claimId);
     }
-    public Reimbursement getReimbursementById(int reimbursementId) {
-        return null;
-    }
-    public List<Reimbursement> getAllReimbursements() {
-        return null;
-    }
-    public boolean deleteReimbursementById(int reimbursementId) {
-        return false;
-    }
-    public Reimbursement getReimbursementByClaimId(int claimId) {
-        return null;
-    }
-    public List<Reimbursement> getReimbursementsByEmployeeId(int employeeId) {
-        return null;
-    }
-    public List<Reimbursement> getReimbursementsByStatus(String status) {
-        return null;
+
+    public List<Reimbursement> viewAllPayments(){
+        return reimbursementService.getAllReimbursements();
     }
 }

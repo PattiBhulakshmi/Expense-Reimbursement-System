@@ -1,38 +1,28 @@
 package com.ers.service;
 
+import com.ers.dao.ClaimItemDaoImpl;
+import com.ers.dao.IClaimItemDao;
 import com.ers.model.ClaimItem;
 
 import java.util.List;
 
 public class ClaimItemServiceImpl implements IClaimItemService {
-    //add constructor to instantiate ClaimItemdao object
-    @Override
-    public ClaimItem addClaimItem(ClaimItem claimItem) {
-        return null;
+    IClaimItemDao claimItemDao;
+
+    public ClaimItemServiceImpl() {
+       this.claimItemDao=new ClaimItemDaoImpl();
     }
 
     @Override
-    public boolean updateClaimItem(ClaimItem claimItem) {
-        return false;
-    }
-
-    @Override
-    public ClaimItem getClaimItemById(int itemId) {
-        return null;
-    }
-
-    @Override
-    public List<ClaimItem> getAllClaimItems() {
-        return List.of();
-    }
-
-    @Override
-    public boolean deleteClaimItemById(int itemId) {
-        return false;
+    public boolean addClaimItem(ClaimItem claimItem) {
+        return claimItemDao.addClaimItem(claimItem);
     }
 
     @Override
     public List<ClaimItem> getClaimItemsByClaimId(int claimId) {
-        return List.of();
+
+        return claimItemDao.getClaimItemsByClaimId(claimId);
     }
+
+
 }
