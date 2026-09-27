@@ -19,8 +19,10 @@ public class EmployeeController {
     }
 
     public Employee getEmployeeById(int employee_id) {
+
         return employeeService.getEmployeeById(employee_id);
     }
+
     public List<Employee> getAllEmployees() {
 
         return employeeService.getAllEmployees();

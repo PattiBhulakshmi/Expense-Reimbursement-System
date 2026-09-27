@@ -12,7 +12,10 @@ public class ExpenseCategoryServiceImpl implements IExpenseCategoryService{
     public ExpenseCategoryServiceImpl() {
         this.expenseCategoryDao = new ExpenseCategoryDaoImpl();
     }
-
+   // used for mock test
+    public ExpenseCategoryServiceImpl(IExpenseCategoryDao expenseCategoryDao) {
+        this.expenseCategoryDao = expenseCategoryDao;
+    }
 
     @Override
     public ExpenseCategory addExpenseCategory(ExpenseCategory expenseCategory) {

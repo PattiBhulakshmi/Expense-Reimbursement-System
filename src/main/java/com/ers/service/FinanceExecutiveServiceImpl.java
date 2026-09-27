@@ -18,6 +18,10 @@ public class FinanceExecutiveServiceImpl implements IFinanceExecutiveService {
       this.financeExecutiveDao=new FinanceExecutiveDaoImpl();
   }
 
+    public FinanceExecutiveServiceImpl(IFinanceExecutiveDao financeExecutiveDao) {
+        this.financeExecutiveDao = financeExecutiveDao;
+    }
+
     @Override
     public FinanceExecutive addFinanceExecutive(FinanceExecutive fin) {
         return financeExecutiveDao.addFinanceExecutive(fin);
@@ -35,7 +39,8 @@ public class FinanceExecutiveServiceImpl implements IFinanceExecutiveService {
 
     @Override
     public List<ExpenseClaim> getPendingClaims() {
-        return financeExecutiveDao.getPendingClaims();
+
+      return financeExecutiveDao.getPendingClaims();
     }
 
     @Override

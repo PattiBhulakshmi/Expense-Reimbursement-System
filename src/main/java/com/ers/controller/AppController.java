@@ -10,7 +10,6 @@ import com.ers.service.IEmployeeService;
 import com.ers.service.IUserService;
 import com.ers.service.UserServiceImpl;
 import com.ers.util.JDBCUtil;
-import org.junit.platform.commons.logging.LoggerFactory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;

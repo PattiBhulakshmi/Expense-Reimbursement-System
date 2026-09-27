@@ -1,21 +1,32 @@
 package com.ers.service;
 
 import com.ers.dao.IUserDao;
+import com.ers.exception.InvalidCredentialsException;
+import com.ers.exception.UserAlreadyExistsException;
 import com.ers.model.User;
 
 import java.util.List;
 
 public class UserServiceImpl implements IUserService{
      IUserDao userDao;
-     public  UserServiceImpl(){
+     public  UserServiceImpl()
+     {
          this.userDao=new  com.ers.dao.UserDaoImpl();
      }
+   // mock test
+    public UserServiceImpl(IUserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public User registerUser(User user) {
-        User existing=userDao.getUserByUsername(user.getUserName());
-        if(existing !=null)
-        return null;
+        User existing = userDao.getUserByUsername(user.getUserName());
+        if (existing != null) {
+
+            throw new UserAlreadyExistsException(
+                    "User already exists with username: " + user.getUserName()
+            );
+        }
         boolean status=userDao.registerUser(user);
         if(status){
             return  userDao.getUserByUsername(user.getUserName());
@@ -26,9 +37,18 @@ public class UserServiceImpl implements IUserService{
     @Override
     public User loginUser(String username, String password) {
         User user=userDao.getUserByUsername(username);
-        if(user !=null && user.getPassword().equals(password)){
-            return user;
+        if (user == null) {
+            throw new InvalidCredentialsException(
+                    "Invalid username or password"
+            );
         }
-        return null;
+
+        if (!user.getPassword().equals(password)) {
+            throw new InvalidCredentialsException(
+                    "Invalid username or password"
+            );
+        }
+
+        return user;
     }
 }

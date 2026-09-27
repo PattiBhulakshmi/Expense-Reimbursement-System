@@ -2,6 +2,7 @@ package com.ers.service;
 
 import com.ers.dao.EmployeeDaoImpl;
 import com.ers.dao.IEmployeeDao;
+import com.ers.exception.EmployeeNotFoundException;
 import com.ers.model.Employee;
 
 import java.util.List;
@@ -26,11 +27,19 @@ public class EmployeeServiceImpl implements IEmployeeService{
         return employeeDao.addEmployee(employee);
     }
 
-
+// custome exception
     @Override
     public Employee getEmployeeById(int employeeId) {
 
-        return employeeDao.getEmployeeById(employeeId);
+        Employee employee = employeeDao.getEmployeeById(employeeId);
+
+        if (employee == null) {
+            throw new EmployeeNotFoundException(
+                    "Employee not found with ID: " + employeeId
+            );
+        }
+
+        return employee;
     }
 
     @Override

@@ -13,6 +13,10 @@ public class ReimbursementServiceImpl implements IReimbursementService{
 
         this.reimbursementDao = new ReimbursementDaoImpl();
     }
+   // mock test
+    public ReimbursementServiceImpl(IReimbursementDao reimbursementDao) {
+        this.reimbursementDao = reimbursementDao;
+    }
 
     @Override
     public boolean addReimbursement(Reimbursement reimbursement) {
@@ -26,6 +30,7 @@ public class ReimbursementServiceImpl implements IReimbursementService{
 
     @Override
     public List<Reimbursement> getAllReimbursements() {
+
         return reimbursementDao.getAllReimbursements();
     }
 }

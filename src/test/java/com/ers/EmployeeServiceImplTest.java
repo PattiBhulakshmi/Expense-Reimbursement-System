@@ -43,11 +43,11 @@ public class EmployeeServiceImplTest {
     @Test
     void testGetEmployeeById() {
 
-        int employeeId = 1;
+        int employeeId = 10;
 
         Employee employee = new Employee();
 
-        when(employeeDao.getEmployeeById(employeeId)).thenReturn(employee);
+        when(employeeDao.getEmployeeById(100)).thenReturn(employee);
         Employee result = employeeService.getEmployeeById(employeeId);
 
         assertNotNull(result);
